@@ -1,0 +1,721 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f7f3ec;
+  color: #1f2933;
+}
+
+.app {
+  min-height: 100vh;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 8%;
+  background: #fffaf2;
+  border-bottom: 1px solid #e5dccf;
+}
+
+.logo {
+  font-size: 28px;
+  font-weight: bold;
+  color: #7c4a1e;
+}
+
+.navbar a {
+  margin-left: 24px;
+  color: #334155;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 40px;
+  padding: 80px 8%;
+  align-items: center;
+}
+
+.tag {
+  color: #9a5b22;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.hero h1 {
+  font-size: 56px;
+  line-height: 1.05;
+  margin: 12px 0 20px;
+  color: #1e293b;
+}
+
+.subtitle {
+  font-size: 20px;
+  line-height: 1.6;
+  color: #475569;
+  max-width: 700px;
+}
+
+.mainButton {
+  margin-top: 24px;
+  padding: 16px 26px;
+  border: none;
+  border-radius: 12px;
+  background: #8b5a2b;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.heroCard {
+  background: white;
+  padding: 32px;
+  border-radius: 24px;
+  box-shadow: 0 20px 45px rgba(85, 60, 30, 0.14);
+}
+
+.heroCard h3 {
+  margin-top: 0;
+  color: #7c4a1e;
+}
+
+.heroCard li {
+  margin: 14px 0;
+  font-size: 16px;
+}
+
+.section {
+  padding: 60px 8%;
+}
+
+.section h2 {
+  font-size: 36px;
+  color: #1e293b;
+}
+
+.section p {
+  max-width: 850px;
+  font-size: 18px;
+  line-height: 1.7;
+  color: #475569;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.card {
+  background: white;
+  padding: 28px;
+  border-radius: 18px;
+  font-weight: bold;
+  box-shadow: 0 10px 30px rgba(85, 60, 30, 0.1);
+}
+.formSection {
+  padding: 50px 8%;
+}
+
+.backButton {
+  border: none;
+  background: transparent;
+  color: #7c4a1e;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.formBox {
+  max-width: 850px;
+  background: white;
+  padding: 40px;
+  border-radius: 24px;
+  box-shadow: 0 20px 45px rgba(85, 60, 30, 0.12);
+}
+
+.formBox h2 {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.formIntro {
+  color: #475569;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.businessForm {
+  margin-top: 30px;
+  display: grid;
+  gap: 22px;
+}
+
+.businessForm label {
+  display: grid;
+  gap: 8px;
+  font-weight: bold;
+  color: #334155;
+}
+
+.businessForm input,
+.businessForm select,
+.businessForm textarea {
+  padding: 14px 16px;
+  border: 1px solid #d6c8b8;
+  border-radius: 12px;
+  font-size: 16px;
+  font-family: inherit;
+}
+
+.businessForm textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+.navButton {
+  border: none;
+  background: #8b5a2b;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.resultsHero {
+  padding: 60px 8% 20px;
+}
+
+.resultsHero h1 {
+  font-size: 46px;
+  margin: 10px 0;
+}
+
+.resultsHero p {
+  font-size: 18px;
+  color: #475569;
+}
+
+.dashboard {
+  padding: 30px 8% 80px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.scoreCard {
+  background: #8b5a2b;
+  color: white;
+  padding: 36px;
+  border-radius: 24px;
+}
+
+.scoreCard h2 {
+  font-size: 56px;
+  margin: 0;
+}
+
+.scoreCard p {
+  font-size: 18px;
+  margin-bottom: 0;
+}
+
+.resultCard {
+  background: white;
+  padding: 28px;
+  border-radius: 22px;
+  box-shadow: 0 14px 35px rgba(85, 60, 30, 0.1);
+}
+
+.resultCard.large {
+  grid-column: span 2;
+}
+
+.resultCard h3 {
+  color: #7c4a1e;
+  margin-top: 0;
+  font-size: 24px;
+}
+
+.resultCard p,
+.resultCard li {
+  color: #475569;
+  line-height: 1.7;
+  font-size: 16px;
+}
+
+.resultCard ul {
+  padding-left: 0;
+  list-style: none;
+}
+.locationBox {
+  display: grid;
+  gap: 12px;
+}
+
+.locationButton {
+  width: fit-content;
+  border: none;
+  background: #f1e4d2;
+  color: #7c4a1e;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.coordinates {
+  background: #f8f1e8;
+  padding: 14px 16px;
+  border-radius: 12px;
+  color: #334155;
+}
+
+.coordinates p {
+  margin: 4px 0;
+}
+
+.locationStatus {
+  color: #7c4a1e;
+  font-size: 14px;
+  margin: 0;
+}
+.verifiedLocation {
+  margin-top: 18px;
+  background: #fff7ed;
+  color: #7c4a1e;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-weight: bold;
+  display: inline-block;
+}
+.mapBox {
+  width: 100%;
+  height: 300px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #e5dccf;
+}
+
+.map {
+  width: 100%;
+  height: 100%;
+}
+
+.resultsHero .mainButton {
+  margin-top: 22px;
+}
+.journeyGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-top: 30px;
+}
+
+.choiceCard {
+  text-align: left;
+  background: #fff7ed;
+  border: 1px solid #e5dccf;
+  padding: 28px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.choiceCard h3 {
+  color: #7c4a1e;
+  font-size: 24px;
+  margin-top: 0;
+}
+
+.choiceCard p {
+  color: #475569;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.skillsGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.skillButton {
+  border: 1px solid #d6c8b8;
+  background: white;
+  color: #334155;
+  padding: 12px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.skillButton.active {
+  background: #8b5a2b;
+  color: white;
+  border-color: #8b5a2b;
+}
+
+.opportunityResults {
+  margin-top: 36px;
+  display: grid;
+  gap: 20px;
+}
+
+.opportunityCard {
+  background: #fff7ed;
+  border: 1px solid #e5dccf;
+  padding: 24px;
+  border-radius: 18px;
+}
+
+.opportunityCard h3 {
+  color: #7c4a1e;
+  margin-top: 0;
+}
+
+.opportunityCard p {
+  color: #475569;
+  line-height: 1.5;
+}
+.formBox label {
+  display: block;
+  margin-top: 22px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.formBox select,
+.formBox input,
+.formBox textarea {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.formBox > label {
+  margin-bottom: 18px;
+}
+
+.formBox .mainButton {
+  margin-top: 28px;
+}
+
+.locationBox {
+  margin-top: 10px;
+}
+
+.formBox select {
+  max-width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #d6c8b8;
+  border-radius: 12px;
+  font-size: 16px;
+  background: white;
+}
+
+.opportunityResults h3 {
+  margin-top: 0;
+}
+
+@media (max-width: 800px) {
+  .journeyGrid,
+  .dashboard,
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .resultCard.large {
+    grid-column: span 1;
+  }
+}
+.scoreRow{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:14px;
+
+border-bottom:1px solid #ddd;
+
+}
+
+.scoreRow:last-child{
+
+border:none;
+
+}
+.scoreRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid #e5dccf;
+}
+
+.scoreRow:last-child {
+  border-bottom: none;
+}
+
+.scoreInfo p {
+  margin: 4px 0 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.scoreValue {
+  font-weight: 800;
+  color: #7c4a1e;
+  white-space: nowrap;
+}
+
+.progressOuter {
+  width: 100%;
+  height: 14px;
+  background: #eee0cf;
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 14px 0;
+}
+
+.progressInner {
+  height: 100%;
+  background: #8b5a2b;
+  border-radius: 999px;
+}
+.navActions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.navButton.secondary {
+  background: #f1e4d2;
+  color: #7c4a1e;
+}
+.navActions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.navButton.secondary {
+  background: #f1e4d2;
+  color: #7c4a1e;
+}
+.taskActions{
+
+display:flex;
+
+flex-direction:column;
+
+gap:10px;
+
+margin:20px 0;
+
+}
+
+.taskActions label{
+
+display:flex;
+
+gap:10px;
+
+align-items:center;
+
+font-weight:500;
+
+}
+
+.launchStatus{
+
+margin-top:12px;
+
+font-weight:700;
+
+color:#2E7D32;
+
+}
+.taskActions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.taskActions label {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-weight: 600;
+  color: #334155;
+}
+
+.taskActions input {
+  width: auto;
+}
+
+.launchStatus {
+  margin-top: 12px;
+  font-weight: 800;
+  color: #7c4a1e;
+}
+.matchReasons {
+  margin-top: 14px;
+  padding: 14px;
+  background: #f8efe3;
+  border-radius: 12px;
+}
+
+.matchReasons ul {
+  margin-top: 10px;
+  padding-left: 18px;
+}
+.matchReasons {
+  margin-top: 14px;
+  padding: 14px;
+  background: #f8efe3;
+  border-radius: 12px;
+}
+
+.matchReasons ul {
+  margin-top: 10px;
+  padding-left: 18px;
+}
+.validationRow,
+.budgetRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr;
+  gap: 12px;
+  align-items: center;
+  margin: 12px 0;
+}
+
+.budgetRow {
+  grid-template-columns: 2fr 1fr;
+}
+
+.validationRow input,
+.validationRow select,
+.budgetRow input {
+  padding: 10px;
+  border: 1px solid #d6c7b5;
+  border-radius: 10px;
+}
+
+@media (max-width: 700px) {
+  .validationRow,
+  .budgetRow {
+    grid-template-columns: 1fr;
+  }
+}
+.validationRow,
+.budgetRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr;
+  gap: 12px;
+  align-items: center;
+  margin: 12px 0;
+}
+
+.budgetRow {
+  grid-template-columns: 2fr 1fr;
+}
+
+.validationRow input,
+.validationRow select,
+.budgetRow input {
+  padding: 10px;
+  border: 1px solid #d6c7b5;
+  border-radius: 10px;
+}
+
+@media (max-width: 700px) {
+  .validationRow,
+  .budgetRow {
+    grid-template-columns: 1fr;
+  }
+}
+.revenueGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 16px;
+}
+
+.revenueGrid label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.revenueGrid input {
+  padding: 10px;
+  border: 1px solid #d6c7b5;
+  border-radius: 10px;
+}
+
+.revenueSummary {
+  margin-top: 20px;
+}
+
+@media (max-width: 700px) {
+  .revenueGrid {
+    grid-template-columns: 1fr;
+  }
+}
+.revenueGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 16px;
+}
+
+.revenueGrid label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.revenueGrid input {
+  padding: 10px;
+  border: 1px solid #d6c7b5;
+  border-radius: 10px;
+}
+
+.financialSnapshot {
+  margin-top: 22px;
+  padding: 18px;
+  background: #f8efe3;
+  border-radius: 14px;
+}
+
+.financialSnapshot p {
+  margin: 8px 0;
+}
+
+@media (max-width: 700px) {
+  .revenueGrid {
+    grid-template-columns: 1fr;
+  }
+}
