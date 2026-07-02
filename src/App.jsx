@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { opportunities } from "./data/opportunities";
 import { findRecommendedOpportunities } from "./engine/recommendation";
 import { calculateReadiness } from "./engine/readiness";
@@ -8,7 +8,19 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "./App.css";
-
+import { auth, googleProvider, db } from "./firebase";
+import { signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  getDocs,
+  deleteDoc,
+  doc,
+  query,
+  where,
+  serverTimestamp,
+} from "firebase/firestore";
 const initialFormData = {
   idea: "",
   location: "",
@@ -22,6 +34,11 @@ const initialFormData = {
 
 function App() {
   const [page, setPage] = useState("home");
+  const [user, setUser] = useState(null);
+  const [saveStatus, setSaveStatus] = useState("");
+  const [savedPlans, setSavedPlans] = useState([]);
+  const [plansStatus, setPlansStatus] = useState("");
+  const [currentPlanId, setCurrentPlanId] = useState(null);
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [timeAvailable, setTimeAvailable] = useState("5–10 hours/week");
   const [recommendedIdeas, setRecommendedIdeas] = useState([]);
@@ -37,6 +54,8 @@ function App() {
   { interested: "", comment: "" },
   { interested: "", comment: "" },
 ]);
+
+
 
 const [budgetItems, setBudgetItems] = useState([
   { name: "Materials / ingredients", amount: 0 },
@@ -140,6 +159,177 @@ const [startupInvestment, setStartupInvestment] = useState(1500);
     { name: "Marketing", amount: 200 },
     { name: "Transport", amount: 150 },
   ];
+}
+
+useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    setUser(currentUser);
+  });
+
+  return () => unsubscribe();
+}, []);
+
+async function loadSavedPlans() {
+  if (!user) {
+    alert("Please sign in first.");
+    return;
+  }
+
+  try {
+    setPlansStatus("Loading saved plans...");
+    setPage("savedPlans");
+
+    const q = query(
+      collection(db, "startupPlans"),
+      where("userId", "==", user.uid)
+    );
+
+    const snapshot = await getDocs(q);
+
+    const plans = snapshot.docs.map((docItem) => ({
+      id: docItem.id,
+      ...docItem.data(),
+    }));
+
+    setSavedPlans(plans);
+    setPlansStatus(plans.length === 0 ? "No saved plans yet." : "");
+  } catch (error) {
+    console.error("Load saved plans error:", error);
+    setPlansStatus("Failed to load saved plans: " + error.message);
+  }
+}
+function openSavedPlan(saved) {
+   setCurrentPlanId(saved.id);
+  setFormData(saved.formData || initialFormData);
+  setSelectedSkills(saved.selectedSkills || []);
+  setTimeAvailable(saved.timeAvailable || "5–10 hours/week");
+  setPlan(saved.plan || null);
+ 
+
+  setCustomerInterviewDone(saved.customerInterviewDone || false);
+  setMarketingDone(saved.marketingDone || false);
+  setValidationCustomers(
+    saved.validationCustomers || [
+      { interested: "", comment: "" },
+      { interested: "", comment: "" },
+      { interested: "", comment: "" },
+      { interested: "", comment: "" },
+      { interested: "", comment: "" },
+    ]
+  );
+
+  setBudgetItems(
+    saved.budgetItems || [
+      { name: "Materials / ingredients", amount: 0 },
+      { name: "Packaging", amount: 0 },
+      { name: "Marketing", amount: 0 },
+      { name: "Transport", amount: 0 },
+    ]
+  );
+
+  setSellingPrice(saved.sellingPrice || 25);
+  setExpectedCustomers(saved.expectedCustomers || 30);
+  setCostPerUnit(saved.costPerUnit || 15);
+  setMonthlyFixedCost(saved.monthlyFixedCost || 300);
+  setStartupInvestment(saved.startupInvestment || 1500);
+
+  setPage("results");
+}
+async function deleteSavedPlan(planId) {
+  try {
+    await deleteDoc(doc(db, "startupPlans", planId));
+    setSavedPlans((prev) => prev.filter((item) => item.id !== planId));
+  } catch (error) {
+    alert("Failed to delete plan: " + error.message);
+  }
+}
+
+async function loginWithGoogle() {
+  try {
+    await signInWithPopup(auth, googleProvider);
+  } catch (error) {
+    alert("Login failed: " + error.message);
+  }
+}
+
+async function logoutUser() {
+  try {
+    await signOut(auth);
+  } catch (error) {
+    alert("Logout failed: " + error.message);
+  }
+}
+
+async function saveStartupPlan() {
+  if (!user) {
+    alert("Please sign in with Google first.");
+    return;
+  }
+
+  if (!plan) {
+    alert("Generate a startup plan first.");
+    return;
+  }
+
+  try {
+    setSaveStatus("Saving plan...");
+
+    await addDoc(collection(db, "startupPlans"), {
+      userId: user.uid,
+      userEmail: user.email,
+      userName: user.displayName,
+      formData,
+      selectedSkills,
+      timeAvailable,
+      plan,
+      customerInterviewDone,
+      marketingDone,
+      validationCustomers,
+      budgetItems,
+      sellingPrice,
+      expectedCustomers,
+      costPerUnit,
+      monthlyFixedCost,
+      startupInvestment,
+      createdAt: serverTimestamp(),
+    });
+
+    setSaveStatus("Plan saved successfully.");
+  } catch (error) {
+    console.error(error);
+    setSaveStatus("Failed to save plan.");
+    alert("Failed to save plan: " + error.message);
+  }
+}
+
+async function updateStartupPlan() {
+  if (!currentPlanId) {
+    alert("Open a saved plan first.");
+    return;
+  }
+
+  try {
+    await updateDoc(doc(db, "startupPlans", currentPlanId), {
+      formData,
+      selectedSkills,
+      timeAvailable,
+      plan,
+      customerInterviewDone,
+      marketingDone,
+      validationCustomers,
+      budgetItems,
+      sellingPrice,
+      expectedCustomers,
+      costPerUnit,
+      monthlyFixedCost,
+      startupInvestment,
+      updatedAt: serverTimestamp(),
+    });
+
+    alert("Startup plan updated successfully.");
+  } catch (error) {
+    alert(error.message);
+  }
 }
   function resetApp() {
     setPage("home");
@@ -479,27 +669,45 @@ const paybackMonths =
   monthlyProfit > 0
     ? Math.ceil(Number(startupInvestment || 0) / monthlyProfit)
     : "Not yet profitable";
-  function Header({ backTo }) {
-    return (
-      <header className="navbar">
-        <div className="logo" onClick={resetApp}>
-          Bedaya
-        </div>
+ function Header({ backTo }) {
+  return (
+    <header className="navbar">
+      <div className="logo" onClick={resetApp}>
+        Bedaya
+      </div>
 
-        <div className="navActions">
-          {backTo && (
-            <button className="navButton" onClick={() => setPage(backTo)}>
-              Back
+      <div className="navActions">
+        {user ? (
+          <>
+            <span className="userBadge">
+              {user.displayName || user.email}
+            </span>
+            <button className="navButton" onClick={loadSavedPlans}>
+  My Plans
+</button>
+            <button className="navButton secondary" onClick={logoutUser}>
+              Sign Out
             </button>
-          )}
-
-          <button className="navButton secondary" onClick={clearCurrentPage}>
-            Clear
+          </>
+        ) : (
+          <button className="navButton" onClick={loginWithGoogle}>
+            Sign in with Google
           </button>
-        </div>
-      </header>
-    );
-  }
+        )}
+
+        {backTo && (
+          <button className="navButton" onClick={() => setPage(backTo)}>
+            Back
+          </button>
+        )}
+
+        <button className="navButton secondary" onClick={clearCurrentPage}>
+          Clear
+        </button>
+      </div>
+    </header>
+  );
+}
 
   if (page === "choose") {
     return (
@@ -856,9 +1064,26 @@ const paybackMonths =
 
             <LocationMap />
 
-            <button className="mainButton" onClick={downloadPDF}>
-              Download Startup Plan PDF
-            </button>
+           <div className="planActionButtons">
+  <button className="planActionButton" onClick={downloadPDF}>
+    Download Startup Plan PDF
+  </button>
+
+  <button className="planActionButton" onClick={saveStartupPlan}>
+    Save to My Account
+  </button>
+
+  {currentPlanId && (
+    <button className="planActionButton updateButton" onClick={updateStartupPlan}>
+      Update Saved Plan
+    </button>
+  )}
+</div>
+
+{saveStatus && <p className="saveStatus">{saveStatus}</p>}
+
+
+{saveStatus && <p className="locationStatus">{saveStatus}</p>}
           </section>
 
           <section className="dashboard">
@@ -1245,7 +1470,87 @@ const paybackMonths =
       </div>
     );
   }
+if (page === "savedPlans") {
+  return (
+    <div className="app">
+      <Header backTo="home" />
 
+      <section className="formSection">
+        <div className="formBox">
+          <p className="tag">My Account</p>
+          <h2>My Saved Startup Plans</h2>
+
+          {plansStatus && <p className="locationStatus">{plansStatus}</p>}
+
+          {savedPlans.length > 0 && (
+            <div className="savedPlansList">
+              {savedPlans.map((saved) => (
+                <div className="savedPlanCard" key={saved.id}>
+                  <h3>{saved.formData?.idea || "Untitled Startup Plan"}</h3>
+
+<span className="planBadge">
+    Saved Plan
+</span>
+
+<p className="savedDate">
+    Saved:
+    {" "}
+    {saved.createdAt?.toDate
+        ? saved.createdAt.toDate().toLocaleDateString()
+        : "Recently"}
+</p>
+
+                  <p>
+                    <strong>Location:</strong>{" "}
+                    {saved.formData?.location || "Not provided"}
+                  </p>
+
+                  <p>
+                    <strong>Customer:</strong>{" "}
+                    {saved.formData?.customer || "Not provided"}
+                  </p>
+
+                  <p>
+                    <strong>Budget:</strong> AED{" "}
+                    {saved.formData?.budget || "0"}
+                  </p>
+
+                  <p>
+                    <strong>Skills:</strong>{" "}
+                    {saved.selectedSkills?.length > 0
+                      ? saved.selectedSkills.join(", ")
+                      : "Not selected"}
+                  </p>
+
+                  <p>
+                    <strong>Summary:</strong>{" "}
+                    {saved.plan?.summary || "No summary available"}
+                  </p>
+
+    <div className="savedPlanActions">
+    <button
+        className="savedActionButton"
+        onClick={() => openSavedPlan(saved)}
+    >
+        Open Plan
+    </button>
+
+    <button
+        className="deleteButton"
+        onClick={() => deleteSavedPlan(saved.id)}
+    >
+        Delete
+    </button>
+</div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+    </div>
+  );
+}
   return (
     <div className="app">
       <header className="navbar">
